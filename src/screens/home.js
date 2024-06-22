@@ -1,50 +1,51 @@
-// src/screens/home.js
 import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 import CustomButton from '../components/customButton';
 
-const NoteCard = ({ item, setCurrentPage }) => (
-  <View style={styles.card}>
-    <Text style={styles.cardTitle}>{item.title}</Text>
-    <Text>{item.desc}</Text>
-    <View style={styles.buttons}>
+const Home = ({ noteList, setCurrentPage }) => {
+  const NoteCard = ({ item }) => (
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>{item.title}</Text>
+      <Text>{item.desc}</Text>
+      <View style={styles.buttons}>
+        <CustomButton
+          backgroundColor="#FFC300"
+          color="#151D3B"
+          text="Ubah"
+          fontSize={12}
+          width={100}
+          onPress={() => setCurrentPage('edit')}
+        />
+        <CustomButton
+          backgroundColor="#D82148"
+          color="#fff"
+          text="Hapus"
+          fontSize={12}
+          width={100}
+          onPress={() => {}}
+        />
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
       <CustomButton
-        backgroundColor="#FFC300"
-        color="#151D3B"
-        text="Ubah"
-        fontSize={12}
-        width={100}
-        onPress={() => setCurrentPage('EditNote')}
+        backgroundColor="#DDD"
+        color="#203239"
+        text="Tambahkan Note"
+        width="100%"
+        onPress={() => setCurrentPage('add')}
       />
-      <CustomButton
-        backgroundColor="#D82148"
-        color="#fff"
-        text="Hapus"
-        fontSize={12}
-        width={100}
-        onPress={() => setCurrentPage('Hapus')}
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={noteList}
+        renderItem={({ item }) => <NoteCard item={item} />}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
-  </View>
-);
-
-const Home = ({ noteList, setCurrentPage }) => (
-  <View style={styles.container}>
-    <CustomButton
-      backgroundColor="#DDD"
-      color="#203239"
-      text="Tambahkan Note"
-      width="100%"
-      onPress={() => setCurrentPage('AddNote')}
-    />
-    <FlatList
-      showsVerticalScrollIndicator={false}
-      data={noteList}
-      renderItem={({ item }) => <NoteCard item={item} setCurrentPage={setCurrentPage} />}
-      keyExtractor={(item) => item.id.toString()}
-    />
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

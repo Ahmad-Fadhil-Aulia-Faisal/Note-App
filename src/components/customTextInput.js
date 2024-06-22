@@ -1,37 +1,35 @@
 import React from 'react';
-import { TextInput, Text, StyleSheet, View } from 'react-native';
+import { View, TextInput, Text, StyleSheet } from 'react-native';
 
-const CustomTextInput = ({
-  text,
-  onChange,
-  label,
-  multiline,
-  numberOfLines,
-}) => {
-  const styles = StyleSheet.create({
-    textInputWrapper: {
-      marginTop: 20,
-    },
-    input: {
-      borderWidth: 2,
-      borderColor: '#DDD',
-      padding: 10,
-    },
-  });
+const CustomTextInput = ({ text, onChange, label, placeholder, multiline, numberOfLines }) => (
+  <View style={styles.container}>
+    {label && <Text style={styles.label}>{label}</Text>}
+    <TextInput
+      style={styles.input}
+      value={text}
+      onChangeText={onChange}
+      placeholder={placeholder}
+      multiline={multiline}
+      numberOfLines={numberOfLines}
+    />
+  </View>
+);
 
-  return (
-    <View style={styles.textInputWrapper}>
-      <Text>{label}</Text>
-      <TextInput
-        multiline={multiline}
-        numberOfLines={numberOfLines}
-        style={styles.input}
-        placeholder={label}
-        onChangeText={onChange}
-        defaultValue={text}
-      />
-    </View>
-  );
-};
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 20,
+  },
+  label: {
+    marginBottom: 5,
+    color: '#203239',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+    textAlignVertical: 'top', // Ensures the text aligns at the top for multiline inputs
+  },
+});
 
 export default CustomTextInput;
