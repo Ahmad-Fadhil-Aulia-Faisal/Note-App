@@ -1,66 +1,57 @@
-// index.tsx
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Home from '../src/screens/home';
-import CustomButton from '../src/components/customButton';
-import CustomTextInput from '../src/components/customTextInput';
+import AddNote from '../src/screens/addNote';
+import EditNote from '../src/screens/editNote';
 
-export default function Index() {
+type CurrentPage = 'home' | 'add' | 'edit'; // Tipe data untuk currentPage
+
+const CurrentPageWidget: React.FC<{
+  currentPage: CurrentPage;
+  noteList: { id: number; title: string; desc: string }[]; // Tipe data untuk noteList
+  setCurrentPage: React.Dispatch<React.SetStateAction<CurrentPage>>; // Tipe data untuk setCurrentPage
+}> = ({ currentPage, noteList, setCurrentPage }) => {
+  switch (currentPage) {
+    case 'home':
+      return <Home noteList={noteList} setCurrentPage={setCurrentPage} />;
+    case 'add':
+      return <AddNote />;
+    case 'edit':
+      return <EditNote />;
+    default:
+      return <Home noteList={noteList} setCurrentPage={setCurrentPage} />;
+  }
+};
+
+const App: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<CurrentPage>('home'); // Inisialisasi currentPage dengan tipe CurrentPage
+
   const [noteList, setNoteList] = useState([
     {
       id: 1,
       title: 'Note pertama',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+      desc:
+        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
     },
   ]);
 
-  const [inputText, setInputText] = useState('');
-
-  const handleTextChange = (text: string) => {
-    setInputText(text);
-  };
-
-  const handleAddNote = () => {
-    const newNote = {
-      id: Date.now(),
-      title: inputText,
-      desc: '',
-    };
-
-    setNoteList([...noteList, newNote]);
-    setInputText('');
-  };
-
-  const handleButtonPress = () => {
-    alert('Button pressed'); // Gantilah dengan logika aplikasi sesuai kebutuhan
-  };
-
   return (
     <View style={styles.container}>
-      <CustomButton
-        backgroundColor="#DDDDDD"
-        color="#39494F"
-        text="Custom Button"
-        width={Dimensions.get('window').width - 80} // Menggunakan lebar layar dengan margin
-        onPress={handleButtonPress} // Menetapkan fungsi handleButtonPress sebagai onPress
+      <CurrentPageWidget
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        noteList={noteList}
       />
-      <CustomTextInput
-        label="Custom Text"
-        multiline
-        numberOfLines={2}
-        onChange={handleTextChange}
-        text={inputText}
-      />
-      <Home noteList={noteList} setNoteList={setNoteList} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 40,
   },
 });
+
+export default App;
