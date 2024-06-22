@@ -11,16 +11,52 @@ const CurrentPageWidget: React.FC<{
   noteList: { id: number; title: string; desc: string }[];
   setCurrentPage: React.Dispatch<React.SetStateAction<CurrentPage>>;
   addNote: (title: string, desc: string) => void;
-}> = ({ currentPage, noteList, setCurrentPage, addNote }) => {
+  deleteNote: (id: number) => void;
+  updateNote: (id: number, title: string, desc: string) => void;
+  currentNote: { id: number; title: string; desc: string } | null;
+  setCurrentNote: React.Dispatch<React.SetStateAction<{ id: number; title: string; desc: string } | null>>;
+}> = ({
+  currentPage,
+  noteList,
+  setCurrentPage,
+  addNote,
+  deleteNote,
+  updateNote,
+  currentNote,
+  setCurrentNote,
+}) => {
   switch (currentPage) {
     case 'home':
-      return <Home noteList={noteList} setCurrentPage={setCurrentPage} />;
+      return (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+          deleteNote={deleteNote}
+          setCurrentNote={setCurrentNote}
+        />
+      );
     case 'add':
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />;
     case 'edit':
-      return <EditNote setCurrentPage={setCurrentPage} />;
+      return currentNote ? (
+        <EditNote note={currentNote} setCurrentPage={setCurrentPage} updateNote={updateNote} />
+      ) : (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+          deleteNote={deleteNote}
+          setCurrentNote={setCurrentNote}
+        />
+      );
     default:
-      return <Home noteList={noteList} setCurrentPage={setCurrentPage} />;
+      return (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+          deleteNote={deleteNote}
+          setCurrentNote={setCurrentNote}
+        />
+      );
   }
 };
 
@@ -33,6 +69,7 @@ const App: React.FC = () => {
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
     },
   ]);
+  const [currentNote, setCurrentNote] = useState<{ id: number; title: string; desc: string } | null>(null);
 
   const addNote = (title: string, desc: string) => {
     const id = noteList.length > 0 ? noteList[noteList.length - 1].id + 1 : 1;
@@ -46,6 +83,18 @@ const App: React.FC = () => {
     ]);
   };
 
+  const deleteNote = (id: number) => {
+    setNoteList(noteList.filter(note => note.id !== id));
+  };
+
+  const updateNote = (id: number, title: string, desc: string) => {
+    setNoteList(
+      noteList.map(note =>
+        note.id === id ? { ...note, title, desc } : note
+      )
+    );
+  };
+
   return (
     <View style={styles.container}>
       <CurrentPageWidget
@@ -53,6 +102,10 @@ const App: React.FC = () => {
         setCurrentPage={setCurrentPage}
         noteList={noteList}
         addNote={addNote}
+        deleteNote={deleteNote}
+        updateNote={updateNote}
+        currentNote={currentNote}
+        setCurrentNote={setCurrentNote}
       />
     </View>
   );

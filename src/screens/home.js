@@ -2,7 +2,7 @@ import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 import CustomButton from '../components/customButton';
 
-const Home = ({ noteList, setCurrentPage }) => {
+const Home = ({ noteList, setCurrentPage, deleteNote, setCurrentNote }) => {
   const NoteCard = ({ item }) => (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{item.title}</Text>
@@ -14,7 +14,10 @@ const Home = ({ noteList, setCurrentPage }) => {
           text="Ubah"
           fontSize={12}
           width={100}
-          onPress={() => setCurrentPage('edit')}
+          onPress={() => {
+            setCurrentNote(item);
+            setCurrentPage('edit');
+          }}
         />
         <CustomButton
           backgroundColor="#D82148"
@@ -22,7 +25,7 @@ const Home = ({ noteList, setCurrentPage }) => {
           text="Hapus"
           fontSize={12}
           width={100}
-          onPress={() => {}}
+          onPress={() => deleteNote(item.id)}
         />
       </View>
     </View>
